@@ -73,14 +73,17 @@ export default function DownloadPage() {
 
         // 📧 SEND EMAIL
         emailjs.send(
-          "service_rgshpfo",
-          "template_gfm2d0l",
-          {
-            to_email: email,
-            message: "Premium activated successfully 🎉"
-          },
-          "UCyArR1zjpcFC2CCe"
-        );
+"service_rgshpfo",
+"template_9qehn5l",
+{
+ to_email: email,
+ action: "Video Download",
+ plan: isPremium ? "Premium User" : "Free User",
+ amount: "0",
+ video: video.name
+},
+"UCyArR1zjpcFC2CCe"
+);
 
       },
 

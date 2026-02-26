@@ -55,15 +55,17 @@ export default function PlanUpgrade() {
 
         // Send Email
         emailjs.send(
-          "service_rgshpfo",
-          "template_gfm2d0l",
-          {
-            to_email: email,
-            plan: selectedPlan,
-            amount: price
-          },
-          "UCyArR1zjpcFC2CCe"
-        );
+"service_rgshpfo",
+"template_9qehn5l",
+{
+ to_email: email,
+ action: "Plan Upgrade",
+ plan: selectedPlan,
+ amount: price,
+ video: "Not Applicable"
+},
+"UCyArR1zjpcFC2CCe"
+);
 
       },
       theme: { color: "#00ffff" }
