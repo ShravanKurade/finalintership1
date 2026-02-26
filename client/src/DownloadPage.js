@@ -8,7 +8,7 @@ export default function DownloadPage() {
   const [downloadCount, setDownloadCount] = useState(0);
   const [email,setEmail]=useState("");
 
-  // 🔥 4 VIDEOS
+  // 🎬 videos
   const videos = [
     {name:"Big Buck Bunny",url:"https://www.w3schools.com/html/mov_bbb.mp4"},
     {name:"Bear Video",url:"https://www.w3schools.com/html/movie.mp4"},
@@ -30,7 +30,7 @@ export default function DownloadPage() {
   const handleDownload=(video)=>{
 
     if(!isPremium && downloadCount>=1){
-      alert("Free user only 1 download per day. Buy premium.");
+      alert("Free user only 1 download. Buy premium.");
       return;
     }
 
@@ -38,6 +38,22 @@ export default function DownloadPage() {
     link.href=video.url;
     link.download=video.name+".mp4";
     link.click();
+
+    // email after download
+    if(email){
+      emailjs.send(
+        "service_rgshpfo",
+        "template_9qehn5l",
+        {
+          to_email: email,
+          action: "Video Download",
+          plan: isPremium ? "Premium" : "Free",
+          amount: "0",
+          video: video.name
+        },
+        "UCyArR1zjpcFC2CCe"
+      );
+    }
 
     const newDownloads=[...downloads,video.name];
     setDownloads(newDownloads);
@@ -48,6 +64,8 @@ export default function DownloadPage() {
       setDownloadCount(newCount);
       localStorage.setItem("downloadCount",newCount);
     }
+
+    alert("Download started + email sent");
   };
 
   // 💰 BUY PREMIUM
@@ -59,11 +77,11 @@ export default function DownloadPage() {
     }
 
     const options = {
-      key: "rzp_test_SKs8rO9rZ7O1Uj", // test key
-      amount: 5000, // ₹50
+      key: "rzp_test_SKs8rO9rZ7O1Uj",
+      amount: 5000,
       currency: "INR",
       name: "Internship Project",
-      description: "Premium Video Download",
+      description: "Premium Upgrade",
 
       handler: function () {
 
@@ -71,20 +89,19 @@ export default function DownloadPage() {
         setIsPremium(true);
         localStorage.setItem("premium","true");
 
-        // 📧 SEND EMAIL
+        // email after payment
         emailjs.send(
-"service_rgshpfo",
-"template_9qehn5l",
-{
- to_email: email,
- action: "Video Download",
- plan: isPremium ? "Premium User" : "Free User",
- amount: "0",
- video: video.name
-},
-"UCyArR1zjpcFC2CCe"
-);
-
+          "service_rgshpfo",
+          "template_9qehn5l",
+          {
+            to_email: email,
+            action: "Premium Purchase",
+            plan: "Premium",
+            amount: "₹50",
+            video: "All Premium Access"
+          },
+          "UCyArR1zjpcFC2CCe"
+        );
       },
 
       theme: { color: "#00e6e6" }
@@ -97,36 +114,35 @@ export default function DownloadPage() {
   return(
     <div style={{textAlign:"center",padding:"20px"}}>
 
-      <h2>🎬 Video Download Section</h2>
+      <h2>🎬 Video Download + Premium</h2>
 
       {/* EMAIL */}
-      {!isPremium && (
-        <>
-          <input
-            placeholder="Enter email for premium"
-            value={email}
-            onChange={(e)=>setEmail(e.target.value)}
-            style={{padding:"10px",marginBottom:"10px"}}
-          />
-          <br/>
+      <input
+        placeholder="Enter email"
+        value={email}
+        onChange={(e)=>setEmail(e.target.value)}
+        style={{padding:"10px",marginBottom:"10px"}}
+      />
+      <br/>
 
-          <button
-            onClick={buyPremium}
-            style={{
-              padding:"10px 20px",
-              background:"gold",
-              border:"none",
-              borderRadius:"8px",
-              marginBottom:"20px",
-              fontWeight:"bold"
-            }}>
-            Buy Premium ₹50
-          </button>
-        </>
+      {!isPremium && (
+        <button
+          onClick={buyPremium}
+          style={{
+            padding:"10px 20px",
+            background:"gold",
+            border:"none",
+            borderRadius:"8px",
+            marginBottom:"20px",
+            fontWeight:"bold"
+          }}>
+          Buy Premium ₹50
+        </button>
       )}
 
       {isPremium && <h3 style={{color:"lime"}}>👑 Premium Activated</h3>}
 
+      {/* VIDEOS */}
       <div style={{
         display:"grid",
         gridTemplateColumns:"repeat(2,1fr)",

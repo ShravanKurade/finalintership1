@@ -12,7 +12,7 @@ export default function PlanUpgrade() {
     if (savedPlan) setPlan(savedPlan);
   }, []);
 
-  // 🎬 VIDEO TIME LIMIT
+  // 🎬 VIDEO LIMIT
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -26,11 +26,11 @@ export default function PlanUpgrade() {
 
     if (video.currentTime >= limit) {
       video.pause();
-      alert(`${plan} plan limit finished.`);
+      alert(`${plan} plan limit finished`);
     }
   };
 
-  // 💳 PAYMENT FUNCTION
+  // 💳 PAYMENT
   const payNow = (selectedPlan, price) => {
 
     if (!email) {
@@ -44,30 +44,31 @@ export default function PlanUpgrade() {
       currency: "INR",
       name: "Internship Project",
       description: selectedPlan + " Plan",
+
       handler: function () {
 
-        // Save plan
+        // save plan
         localStorage.setItem("plan", selectedPlan);
         localStorage.setItem("premium", "true");
         setPlan(selectedPlan);
 
         alert("Payment Successful 🎉");
 
-        // Send Email
+        // 📧 email send
         emailjs.send(
-"service_rgshpfo",
-"template_9qehn5l",
-{
- to_email: email,
- action: "Plan Upgrade",
- plan: selectedPlan,
- amount: price,
- video: "Not Applicable"
-},
-"UCyArR1zjpcFC2CCe"
-);
-
+          "service_rgshpfo",
+          "template_9qehn5l",
+          {
+            to_email: email,
+            action: "Plan Upgrade",
+            plan: selectedPlan,
+            amount: "₹" + price,
+            video: "Premium Access"
+          },
+          "UCyArR1zjpcFC2CCe"
+        );
       },
+
       theme: { color: "#00ffff" }
     };
 
@@ -78,53 +79,78 @@ export default function PlanUpgrade() {
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
 
-      <h2>💎 Plan Upgrade</h2>
+      <h2>💎 Plan Upgrade + Email Invoice</h2>
       <h3>Current Plan: {plan}</h3>
 
-      {/* Email */}
+      {/* EMAIL */}
       <input
         type="email"
         placeholder="Enter email for invoice"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        style={{ padding: "10px", marginBottom: "15px", borderRadius: "8px" }}
+        style={{
+          padding: "10px",
+          marginBottom: "15px",
+          borderRadius: "8px"
+        }}
       />
 
       <br />
 
-      {/* Video */}
+      {/* VIDEO */}
       <video
         ref={videoRef}
         width="700"
         controls
         onTimeUpdate={handleTimeUpdate}
-        style={{ borderRadius: "15px", boxShadow: "0 0 20px cyan" }}
+        style={{
+          borderRadius: "15px",
+          boxShadow: "0 0 20px cyan"
+        }}
       >
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" />
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
       </video>
 
       <p>
         Free: 5min | Bronze: 7min | Silver: 10min | Gold: Unlimited
       </p>
 
-      {/* 3 OPTIONS */}
+      {/* BUTTONS */}
       <div style={{ marginTop: "20px" }}>
 
         <button
           onClick={() => payNow("Bronze", 49)}
-          style={{ margin: "10px", padding: "10px 20px", background: "#cd7f32", border: "none", borderRadius: "8px" }}>
+          style={{
+            margin: "10px",
+            padding: "10px 20px",
+            background: "#cd7f32",
+            border: "none",
+            borderRadius: "8px"
+          }}>
           Bronze ₹49
         </button>
 
         <button
           onClick={() => payNow("Silver", 79)}
-          style={{ margin: "10px", padding: "10px 20px", background: "#C0C0C0", border: "none", borderRadius: "8px" }}>
+          style={{
+            margin: "10px",
+            padding: "10px 20px",
+            background: "#C0C0C0",
+            border: "none",
+            borderRadius: "8px"
+          }}>
           Silver ₹79
         </button>
 
         <button
           onClick={() => payNow("Gold", 100)}
-          style={{ margin: "10px", padding: "10px 20px", background: "gold", border: "none", borderRadius: "8px" }}>
+          style={{
+            margin: "10px",
+            padding: "10px 20px",
+            background: "gold",
+            border: "none",
+            borderRadius: "8px"
+          }}>
           Gold ₹100
         </button>
 
