@@ -26,10 +26,11 @@ export default function DownloadPage() {
     setDownloadCount(count);
   },[]);
 
+  // 🔥 DOWNLOAD
   const handleDownload=(video)=>{
 
     if(!isPremium && downloadCount>=1){
-      alert("Free user only 1 download per day.");
+      alert("Free user only 1 download per day. Buy premium.");
       return;
     }
 
@@ -49,10 +50,79 @@ export default function DownloadPage() {
     }
   };
 
+  // 💰 BUY PREMIUM
+  const buyPremium = () => {
+
+    if(!email){
+      alert("Enter email first");
+      return;
+    }
+
+    const options = {
+      key: "rzp_test_1DP5mmOlF5G5ag", // test key
+      amount: 5000, // ₹50
+      currency: "INR",
+      name: "Internship Project",
+      description: "Premium Video Download",
+
+      handler: function () {
+
+        alert("✅ Premium Activated!");
+        setIsPremium(true);
+        localStorage.setItem("premium","true");
+
+        // 📧 SEND EMAIL
+        emailjs.send(
+          "service_rgshpfo",
+          "template_gfm2d0l",
+          {
+            to_email: email,
+            message: "Premium activated successfully 🎉"
+          },
+          "UCyArR1zjpcFC2CCe"
+        );
+
+      },
+
+      theme: { color: "#00e6e6" }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
   return(
     <div style={{textAlign:"center",padding:"20px"}}>
 
       <h2>🎬 Video Download Section</h2>
+
+      {/* EMAIL */}
+      {!isPremium && (
+        <>
+          <input
+            placeholder="Enter email for premium"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+            style={{padding:"10px",marginBottom:"10px"}}
+          />
+          <br/>
+
+          <button
+            onClick={buyPremium}
+            style={{
+              padding:"10px 20px",
+              background:"gold",
+              border:"none",
+              borderRadius:"8px",
+              marginBottom:"20px",
+              fontWeight:"bold"
+            }}>
+            Buy Premium ₹50
+          </button>
+        </>
+      )}
+
+      {isPremium && <h3 style={{color:"lime"}}>👑 Premium Activated</h3>}
 
       <div style={{
         display:"grid",

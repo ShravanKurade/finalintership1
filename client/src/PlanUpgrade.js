@@ -28,12 +28,37 @@ export default function PlanUpgrade() {
     }
   };
 
+  // 🔥 PAYMENT FUNCTION
+  const upgradeToGold = () => {
+
+    const options = {
+      key: "rzp_test_1DP5mmOlF5G5ag", // Test key
+      amount: 10000, // ₹100
+      currency: "INR",
+      name: "Internship Project",
+      description: "Gold Plan Upgrade",
+      handler: function (response) {
+
+        alert("✅ Payment Successful!");
+        setPlan("Gold");
+        localStorage.setItem("plan", "Gold");
+
+      },
+      theme: {
+        color: "#00e6e6"
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
   return (
     <div style={{ textAlign: "center", padding:"20px" }}>
 
       <h2>💎 Current Plan: {plan}</h2>
 
-      {/* SINGLE VIDEO */}
+      {/* VIDEO */}
       <video
         ref={videoRef}
         width="700"
@@ -50,6 +75,24 @@ export default function PlanUpgrade() {
       <p>
         Free: 5min | Bronze: 7min | Silver: 10min | Gold: Unlimited
       </p>
+
+      {/* 🔥 Upgrade Button */}
+      {plan !== "Gold" && (
+        <button
+          onClick={upgradeToGold}
+          style={{
+            padding:"12px 25px",
+            fontSize:"16px",
+            background:"gold",
+            border:"none",
+            borderRadius:"8px",
+            cursor:"pointer",
+            marginTop:"20px"
+          }}
+        >
+          Upgrade to Gold ₹100
+        </button>
+      )}
 
     </div>
   );
