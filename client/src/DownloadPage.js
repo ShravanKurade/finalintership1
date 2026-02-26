@@ -59,7 +59,7 @@ export default function DownloadPage() {
     }
 
     const options = {
-      key: "rzp_test_1DP5mmOlF5G5ag", // test key
+      key: "rzp_test_SKs8rO9rZ7O1Uj", // test key
       amount: 5000, // ₹50
       currency: "INR",
       name: "Internship Project",
