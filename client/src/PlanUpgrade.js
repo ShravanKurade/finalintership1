@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function PlanUpgrade() {
 
   const [plan, setPlan] = useState("Free");
+  const [email, setEmail] = useState("");
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -10,8 +12,8 @@ export default function PlanUpgrade() {
     if (savedPlan) setPlan(savedPlan);
   }, []);
 
+  // 🎬 VIDEO TIME LIMIT
   const handleTimeUpdate = () => {
-
     const video = videoRef.current;
     if (!video) return;
 
@@ -28,25 +30,43 @@ export default function PlanUpgrade() {
     }
   };
 
-  // 🔥 PAYMENT FUNCTION
-  const upgradeToGold = () => {
+  // 💳 PAYMENT FUNCTION
+  const payNow = (selectedPlan, price) => {
+
+    if (!email) {
+      alert("Enter email first");
+      return;
+    }
 
     const options = {
-      key: "rzp_test_1DP5mmOlF5G5ag", // Test key
-      amount: 10000, // ₹100
+      key: "rzp_test_SKs8rO9rZ7O1Uj",
+      amount: price * 100,
       currency: "INR",
       name: "Internship Project",
-      description: "Gold Plan Upgrade",
-      handler: function (response) {
+      description: selectedPlan + " Plan",
+      handler: function () {
 
-        alert("✅ Payment Successful!");
-        setPlan("Gold");
-        localStorage.setItem("plan", "Gold");
+        // Save plan
+        localStorage.setItem("plan", selectedPlan);
+        localStorage.setItem("premium", "true");
+        setPlan(selectedPlan);
+
+        alert("Payment Successful 🎉");
+
+        // Send Email
+        emailjs.send(
+          "service_rgshpfo",
+          "template_gfm2d0l",
+          {
+            to_email: email,
+            plan: selectedPlan,
+            amount: price
+          },
+          "UCyArR1zjpcFC2CCe"
+        );
 
       },
-      theme: {
-        color: "#00e6e6"
-      }
+      theme: { color: "#00ffff" }
     };
 
     const rzp = new window.Razorpay(options);
@@ -54,45 +74,59 @@ export default function PlanUpgrade() {
   };
 
   return (
-    <div style={{ textAlign: "center", padding:"20px" }}>
+    <div style={{ textAlign: "center", padding: "20px" }}>
 
-      <h2>💎 Current Plan: {plan}</h2>
+      <h2>💎 Plan Upgrade</h2>
+      <h3>Current Plan: {plan}</h3>
 
-      {/* VIDEO */}
+      {/* Email */}
+      <input
+        type="email"
+        placeholder="Enter email for invoice"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        style={{ padding: "10px", marginBottom: "15px", borderRadius: "8px" }}
+      />
+
+      <br />
+
+      {/* Video */}
       <video
         ref={videoRef}
         width="700"
         controls
         onTimeUpdate={handleTimeUpdate}
-        style={{
-          borderRadius:"15px",
-          boxShadow:"0 0 20px cyan"
-        }}
+        style={{ borderRadius: "15px", boxShadow: "0 0 20px cyan" }}
       >
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" />
       </video>
 
       <p>
         Free: 5min | Bronze: 7min | Silver: 10min | Gold: Unlimited
       </p>
 
-      {/* 🔥 Upgrade Button */}
-      {plan !== "Gold" && (
+      {/* 3 OPTIONS */}
+      <div style={{ marginTop: "20px" }}>
+
         <button
-          onClick={upgradeToGold}
-          style={{
-            padding:"12px 25px",
-            fontSize:"16px",
-            background:"gold",
-            border:"none",
-            borderRadius:"8px",
-            cursor:"pointer",
-            marginTop:"20px"
-          }}
-        >
-          Upgrade to Gold ₹100
+          onClick={() => payNow("Bronze", 49)}
+          style={{ margin: "10px", padding: "10px 20px", background: "#cd7f32", border: "none", borderRadius: "8px" }}>
+          Bronze ₹49
         </button>
-      )}
+
+        <button
+          onClick={() => payNow("Silver", 79)}
+          style={{ margin: "10px", padding: "10px 20px", background: "#C0C0C0", border: "none", borderRadius: "8px" }}>
+          Silver ₹79
+        </button>
+
+        <button
+          onClick={() => payNow("Gold", 100)}
+          style={{ margin: "10px", padding: "10px 20px", background: "gold", border: "none", borderRadius: "8px" }}>
+          Gold ₹100
+        </button>
+
+      </div>
 
     </div>
   );
